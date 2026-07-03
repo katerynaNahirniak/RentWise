@@ -1,0 +1,219 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(135deg, #f0f9ff, #c9e9da);
+  color: #172033;
+}
+
+.page {
+  min-height: 100vh;
+  padding: 28px;
+}
+
+.navbar {
+  max-width: 1180px;
+  margin: 0 auto 35px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 18px 24px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.navbar span {
+  color: #64748b;
+  font-weight: 600;
+}
+
+.hero {
+  max-width: 1180px;
+  margin: 0 auto 32px;
+  text-align: center;
+}
+
+.hero h1 {
+  max-width: 780px;
+  margin: 0 auto 14px;
+  font-size: 44px;
+  line-height: 1.1;
+}
+
+.hero p {
+  font-size: 18px;
+  color: #526072;
+  margin: 0 auto;
+}
+
+.dashboard {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 28px;
+}
+
+.card {
+  background: white;
+  border-radius: 14px;
+  padding: 30px;
+  box-shadow: 0 12px 35px rgba(15, 23, 42, 0.1);
+}
+
+.card h2 {
+  margin-top: 0;
+  font-size: 24px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-top: 16px;
+  margin-bottom: 7px;
+  font-weight: 700;
+  color: #334155;
+}
+
+input,
+select {
+  padding: 13px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 16px;
+  background: #f8fafc;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #0f766e;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.14);
+}
+
+button {
+  margin-top: 26px;
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  background: #0f766e;
+  color: white;
+  font-size: 17px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #115e59;
+}
+
+.result-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 70px 20px;
+  color: #64748b;
+}
+
+.icon {
+  font-size: 64px;
+  margin-bottom: 14px;
+}
+
+.rent-value {
+  font-size: 58px;
+  font-weight: 900;
+  color: #0f172a;
+  margin-top: 34px;
+}
+
+.muted {
+  color: #64748b;
+  margin-top: 14px;
+  margin-bottom: 0;
+}
+
+.badge {
+  display: inline-block;
+  width: fit-content;
+  margin: 24px 0;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-weight: 800;
+}
+
+.fairly-priced {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.overpriced {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.underpriced {
+  background: #ffedd5;
+  color: #9a3412;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.summary-grid div {
+  background: #f8fafc;
+  padding: 18px;
+  border-radius: 10px;
+}
+
+.summary-grid span {
+  display: block;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.summary-grid strong {
+  font-size: 24px;
+}
+
+.explanation {
+  margin-top: 22px;
+  color: #526072;
+  line-height: 1.6;
+}
+
+@media (max-width: 850px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .hero h1 {
+    font-size: 34px;
+  }
+
+  .navbar {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

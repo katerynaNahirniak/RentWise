@@ -1,0 +1,19 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Node
+node_modules/
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Build
+dist/
