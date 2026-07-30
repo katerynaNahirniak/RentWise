@@ -10,11 +10,20 @@ from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from backend.auth import hash_password
+from backend.auth import (
+    create_access_token,
+    hash_password,
+    verify_password,
+)
 from backend.database import Base, engine, get_db
 from backend.models import User
-from backend.schemas import UserRegister, UserResponse
-
+from backend.schemas import (
+    TokenResponse,
+    UserLogin,
+    UserRegister,
+    UserResponse,
+)
+from backend.dependencies import get_current_user
 
 app = FastAPI(title="RentWise API")
 
@@ -85,8 +94,45 @@ def register_user(
     db.refresh(new_user)
 
     return new_user
+@app.post(
+    "/login",
+    response_model=TokenResponse,
+)
+def login_user(
+    login_data: UserLogin,
+    db: Session = Depends(get_db),
+):
+    normalized_email = login_data.email.lower()
 
+    user = db.scalar(
+        select(User).where(User.email == normalized_email)
+    )
 
+    if user is None or not verify_password(
+        login_data.password,
+        user.hashed_password,
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password.",
+        )
+
+    access_token = create_access_token(
+        subject=str(user.id)
+    )
+
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+    }
+@app.get(
+    "/users/me",
+    response_model=UserResponse,
+)
+def read_current_user(
+    current_user: User = Depends(get_current_user),
+):
+    return current_user
 @app.get("/locations")
 def get_locations():
     return sorted(

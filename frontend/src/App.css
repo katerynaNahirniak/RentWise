@@ -217,3 +217,35 @@ button:hover {
     gap: 8px;
   }
 }
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.logout-button {
+  width: auto;
+  margin: 0;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  background: #355c5a;
+  color: white;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background: #294a48;
+}
+
+@media (max-width: 650px) {
+  .navbar-actions {
+    gap: 12px;
+  }
+
+  .navbar-actions span {
+    display: none;
+  }
+}
