@@ -60,6 +60,7 @@ function App() {
       alert("Could not connect to backend.");
     }
   }
+  
 
   const hasAskingRent = result && result.asking_rent !== undefined;
 

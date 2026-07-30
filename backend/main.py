@@ -1,12 +1,24 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
-import pandas as pd
-import joblib
 from pathlib import Path
-from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
 
+import joblib
+import pandas as pd
+
+from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+
+from backend.auth import hash_password
+from backend.database import Base, engine, get_db
+from backend.models import User
+from backend.schemas import UserRegister, UserResponse
+
+
 app = FastAPI(title="RentWise API")
+
+Base.metadata.create_all(bind=engine)
 
 app.add_middleware(
     CORSMiddleware,
@@ -19,28 +31,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 MODEL_PATH = BASE_DIR / "models" / "rentwise_model.pkl"
+DATASET_PATH = BASE_DIR / "data" / "processed" / "rentwise_cleaned.csv"
 
 model = joblib.load(MODEL_PATH)
-dataset = pd.read_csv("data/processed/rentwise_cleaned.csv")
+dataset = pd.read_csv(DATASET_PATH)
 
-@app.get("/locations")
-def get_locations():
-    locations = sorted(dataset["Location"].dropna().unique().tolist())
-    return locations
-
-
-@app.get("/property-types")
-def get_property_types():
-    property_types = sorted(dataset["Property Type"].dropna().unique().tolist())
-    return property_types
-
-
-@app.get("/bedrooms")
-def get_bedrooms():
-    bedrooms = sorted(dataset["Number of Bedrooms"].dropna().unique().tolist())
-    return bedrooms
 
 class RentPredictionRequest(BaseModel):
     location: str
@@ -55,15 +53,73 @@ def home():
     return {"message": "RentWise API is running"}
 
 
+@app.post(
+    "/register",
+    response_model=UserResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+def register_user(
+    user_data: UserRegister,
+    db: Session = Depends(get_db),
+):
+    normalized_email = user_data.email.lower()
+
+    existing_user = db.scalar(
+        select(User).where(User.email == normalized_email)
+    )
+
+    if existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="An account with this email already exists.",
+        )
+
+    new_user = User(
+        name=user_data.name.strip(),
+        email=normalized_email,
+        hashed_password=hash_password(user_data.password),
+    )
+
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+
+    return new_user
+
+
+@app.get("/locations")
+def get_locations():
+    return sorted(
+        dataset["Location"].dropna().unique().tolist()
+    )
+
+
+@app.get("/property-types")
+def get_property_types():
+    return sorted(
+        dataset["Property Type"].dropna().unique().tolist()
+    )
+
+
+@app.get("/bedrooms")
+def get_bedrooms():
+    return sorted(
+        dataset["Number of Bedrooms"].dropna().unique().tolist()
+    )
+
+
 @app.post("/predict")
 def predict_rent(request: RentPredictionRequest):
-
-    input_data = pd.DataFrame([{
-        "Location": request.location,
-        "Property Type": request.property_type,
-        "Number of Bedrooms": request.number_of_bedrooms,
-        "Year": request.year
-    }])
+    input_data = pd.DataFrame(
+        [
+            {
+                "Location": request.location,
+                "Property Type": request.property_type,
+                "Number of Bedrooms": request.number_of_bedrooms,
+                "Year": request.year,
+            }
+        ]
+    )
 
     predicted_rent = float(model.predict(input_data)[0])
 
@@ -85,5 +141,5 @@ def predict_rent(request: RentPredictionRequest):
         "predicted_monthly_rent": round(predicted_rent, 2),
         "asking_rent": request.asking_rent,
         "difference": round(difference, 2),
-        "assessment": assessment
+        "assessment": assessment,
     }
