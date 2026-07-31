@@ -10,15 +10,15 @@ from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from auth import (
+from .auth import (
     create_access_token,
     hash_password,
     verify_password,
 )
-from database import Base, engine, get_db
-from dependencies import get_current_user
-from models import Prediction, User
-from schemas import (
+from .database import Base, engine, get_db
+from .dependencies import get_current_user
+from .models import Prediction, User
+from .schemas import (
     TokenResponse,
     UserLogin,
     UserRegister,
