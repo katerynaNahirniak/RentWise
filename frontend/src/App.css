@@ -249,3 +249,73 @@ button:hover {
     display: none;
   }
 }
+/* ===========================
+   NAVBAR & BUTTONS
+=========================== */
+
+.navbar {
+  max-width: 1180px;
+  margin: 0 auto 35px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 18px 24px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+.navbar-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 15px;
+  flex-wrap: nowrap;
+}
+
+.nav-button,
+.logout-button {
+  margin: 0;
+  min-width: 120px;
+  height: 46px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  background: #0f766e;
+  color: white;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.nav-button:hover,
+.logout-button:hover {
+  background: #115e59;
+}
+
+@media (max-width: 850px) {
+  .navbar {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .navbar-actions {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+.history-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 24px;
+  margin: 30px auto;
+  max-width: 1180px;
+  padding: 0 20px;
+}
+
+.history-card {
+  margin: 0;
+}
